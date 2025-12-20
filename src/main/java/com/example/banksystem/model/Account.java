@@ -11,10 +11,8 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     private String accountNumber;

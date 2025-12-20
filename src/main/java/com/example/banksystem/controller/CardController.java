@@ -38,7 +38,7 @@ public class CardController {
             User user = userRepository.findByFullname(principal.getName())
                     .orElseThrow(() -> new RuntimeException("User tapılmadı"));
 
-            if (!account.getUserId().equals(user.getId()))
+            if (account.getUser() == null || !account.getUser().getId().equals(user.getId()))
                 return ResponseEntity.status(403).body("Bu hesab üzrə icazəniz yoxdur");
 
             Card card = cardService.createCard(accountId, cardType);
@@ -57,7 +57,7 @@ public class CardController {
             User user = userRepository.findByFullname(principal.getName())
                     .orElseThrow(() -> new RuntimeException("User tapılmadı"));
 
-            if (!account.getUserId().equals(user.getId()))
+            if (account.getUser() == null || !account.getUser().getId().equals(user.getId()))
                 return ResponseEntity.status(403).body("Bu hesab üzrə icazəniz yoxdur");
 
             List<Card> cards = cardService.getCardsByAccount(accountId);

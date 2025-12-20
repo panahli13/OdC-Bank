@@ -40,7 +40,7 @@ public class LoanController {
             User user = userRepository.findByFullname(principalUser.getName())
                     .orElseThrow(() -> new RuntimeException("User tapılmadı"));
 
-            if (!account.getUserId().equals(user.getId()))
+            if (account.getUser() == null || !account.getUser().getId().equals(user.getId()))
                 return ResponseEntity.status(403).body("Bu hesab üzrə icazəniz yoxdur");
 
             Loan loan = loanService.applyLoan(accountId, principal, interestRate, termMonths);
@@ -64,7 +64,7 @@ public class LoanController {
             User user = userRepository.findByFullname(principalUser.getName())
                     .orElseThrow(() -> new RuntimeException("User tapılmadı"));
 
-            if (!account.getUserId().equals(user.getId()))
+            if (account.getUser() == null || !account.getUser().getId().equals(user.getId()))
                 return ResponseEntity.status(403).body("Bu hesab üzrə icazəniz yoxdur");
 
             loanService.makeRepayment(loanId, amount);
@@ -84,7 +84,7 @@ public class LoanController {
             User user = userRepository.findByFullname(principalUser.getName())
                     .orElseThrow(() -> new RuntimeException("User tapılmadı"));
 
-            if (!account.getUserId().equals(user.getId()))
+            if (account.getUser() == null || !account.getUser().getId().equals(user.getId()))
                 return ResponseEntity.status(403).body("Bu hesab üzrə icazəniz yoxdur");
 
             List<Loan> loans = loanService.getLoansByAccount(accountId);

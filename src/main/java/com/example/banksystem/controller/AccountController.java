@@ -36,7 +36,7 @@ public class AccountController {
         User user = userRepository.findByFullname(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User tapılmadı"));
 
-        if (!account.getUserId().equals(user.getId()))
+        if (account.getUser() == null || !account.getUser().getId().equals(user.getId()))
             return ResponseEntity.status(403).body("Bu hesab üzrə icazəniz yoxdur");
 
         return ResponseEntity.ok(account.getBalance());
@@ -49,7 +49,7 @@ public class AccountController {
         User user = userRepository.findByFullname(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User tapılmadı"));
 
-        if (!account.getUserId().equals(user.getId()))
+        if (account.getUser() == null || !account.getUser().getId().equals(user.getId()))
             return ResponseEntity.status(403).body("Bu hesab üzrə icazəniz yoxdur");
 
         List<Transaction> transactions = transactionRepository.findByFromAccountIdOrToAccountId(accountId, accountId);

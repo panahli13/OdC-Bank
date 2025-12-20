@@ -30,8 +30,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         System.out.println("JWT Filter çağırıldı: " + request.getRequestURI());
 
-        filterChain.doFilter(request, response);
-
         final String authHeader = request.getHeader("Authorization");
 
         String email = null;

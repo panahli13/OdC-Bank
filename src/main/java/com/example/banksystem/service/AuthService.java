@@ -26,7 +26,9 @@ public class AuthService {
 
         User user = new User();
         user.setFullname(dto.getFullname());
+        user.setFincode(dto.getFincode());
         user.setEmail(dto.getEmail());
+        user.setPhone(dto.getPhone());
         user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
         user.setEnabled(false);
         String code = UUID.randomUUID().toString();
