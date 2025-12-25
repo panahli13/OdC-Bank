@@ -1,37 +1,15 @@
-HELP.md
-.mvn/
-.target/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-**/src/main/generated/
+# Maven build files
+target/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
+# IDE
 .idea/
-*.iws
+.vscode/
 *.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# Env & logs
+.env
+*.log
 
-### VS Code ###
-
-### Other ###
+# OS files
 .DS_Store
+Thumbs.db
