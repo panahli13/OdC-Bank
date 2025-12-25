@@ -30,12 +30,11 @@ public class CardController {
     public ResponseEntity<?> createCard(
             @RequestParam Long accountId,
             @RequestParam String cardType,
-            Principal principal
-    ) {
+            Principal principal) {
         try {
             Account account = accountRepository.findById(accountId)
                     .orElseThrow(() -> new RuntimeException("Account tapılmadı"));
-            User user = userRepository.findByFullname(principal.getName())
+            User user = userRepository.findByEmail(principal.getName())
                     .orElseThrow(() -> new RuntimeException("User tapılmadı"));
 
             if (account.getUser() == null || !account.getUser().getId().equals(user.getId()))
@@ -49,12 +48,35 @@ public class CardController {
         }
     }
 
+    @PostMapping("/add-external")
+    public ResponseEntity<?> addExternalCard(
+            @RequestParam Long accountId,
+            @RequestParam String cardNumber,
+            @RequestParam String cardType,
+            Principal principal) {
+        try {
+            Account account = accountRepository.findById(accountId)
+                    .orElseThrow(() -> new RuntimeException("Account tapılmadı"));
+            User user = userRepository.findByEmail(principal.getName())
+                    .orElseThrow(() -> new RuntimeException("User tapılmadı"));
+
+            if (account.getUser() == null || !account.getUser().getId().equals(user.getId()))
+                return ResponseEntity.status(403).body("Bu hesab üzrə icazəniz yoxdur");
+
+            Card card = cardService.addExternalCard(accountId, cardNumber, cardType);
+            return ResponseEntity.ok(card);
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Xəta: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/account/{accountId}")
     public ResponseEntity<?> getCardsByAccount(@PathVariable Long accountId, Principal principal) {
         try {
             Account account = accountRepository.findById(accountId)
                     .orElseThrow(() -> new RuntimeException("Account tapılmadı"));
-            User user = userRepository.findByFullname(principal.getName())
+            User user = userRepository.findByEmail(principal.getName())
                     .orElseThrow(() -> new RuntimeException("User tapılmadı"));
 
             if (account.getUser() == null || !account.getUser().getId().equals(user.getId()))
@@ -63,6 +85,20 @@ public class CardController {
             List<Card> cards = cardService.getCardsByAccount(accountId);
             return ResponseEntity.ok(cards);
 
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Xəta: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteCard(
+            @RequestParam Long cardId,
+            @RequestParam String email,
+            @RequestParam String password,
+            Principal principal) {
+        try {
+            cardService.deleteCard(cardId, email, password);
+            return ResponseEntity.ok("Card deleted");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Xəta: " + e.getMessage());
         }

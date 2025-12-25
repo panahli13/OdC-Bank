@@ -27,6 +27,12 @@ public class AuthController {
         return ResponseEntity.ok("Email verified successfully.");
     }
 
+    @PostMapping("/resend")
+    public ResponseEntity<String> resend(@RequestParam String email) {
+        authService.resendVerificationCode(email);
+        return ResponseEntity.ok("Verification code resent.");
+    }
+
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto dto) {
         String token = authService.login(dto);

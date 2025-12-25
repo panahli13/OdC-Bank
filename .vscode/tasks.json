@@ -1,0 +1,29 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start Backend",
+            "type": "shell",
+            "command": "mvn spring-boot:run",
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "java",
+                "pattern": {
+                    "regexp": "^.*(Started BankSystemApplication).*",
+                    "file": 1,
+                    "location": 2,
+                    "message": 3
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*(Starting BankSystemApplication).*",
+                    "endsPattern": "^.*(Started BankSystemApplication).*"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        }
+    ]
+}

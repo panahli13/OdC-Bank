@@ -13,6 +13,7 @@ public class Card {
     private Long id;
 
     private String cardNumber;
+    private String cvv;
 
     @Enumerated(EnumType.STRING)
     private CardType cardType; // DEBIT, CREDIT, CASHBACK
@@ -22,6 +23,15 @@ public class Card {
     private Double creditLimit;
     private Double currentDebt;
 
+    @Column(columnDefinition = "DOUBLE PRECISION DEFAULT 0.0")
+    private Double balance = 0.0; // AZN
+
+    @Column(columnDefinition = "DOUBLE PRECISION DEFAULT 0.0")
+    private Double balanceUsd = 0.0;
+
+    @Column(columnDefinition = "DOUBLE PRECISION DEFAULT 0.0")
+    private Double balanceEur = 0.0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
@@ -29,6 +39,9 @@ public class Card {
     public enum CardType {
         DEBIT,
         CREDIT,
-        CASHBACK
+        CASHBACK,
+        EXTERNAL,
+        GOLD,
+        PLATINUM
     }
 }

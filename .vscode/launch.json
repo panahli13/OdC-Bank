@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug Backend",
+            "request": "launch",
+            "mainClass": "com.example.banksystem.BankSystemApplication",
+            "projectName": "name"
+        },
+        {
+            "name": "Open Frontend",
+            "type": "chrome",
+            "request": "launch",
+            "file": "${workspaceFolder}/frontend/index.html"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Start All",
+            "configurations": [
+                "Debug Backend",
+                "Open Frontend"
+            ],
+            "stopAll": true
+        }
+    ]
+}

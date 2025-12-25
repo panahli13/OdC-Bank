@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 public class TransactionDTO {
-    private String type;          // DEPOSIT, WITHDRAW, TRANSFER
+    private String type;
     private Double amount;
     private Long fromAccount;
     private Long toAccount;

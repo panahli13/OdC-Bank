@@ -27,6 +27,19 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
+    public Account redeemBonus(Long accountId) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+
+        if (account.getBonusBalance() != null && account.getBonusBalance() > 0) {
+            account.setBalance(account.getBalance() + account.getBonusBalance());
+            account.setBonusBalance(0.0);
+            return accountRepository.save(account);
+        } else {
+            throw new RuntimeException("No bonus balance to redeem");
+        }
+    }
+
     private String generateAccountNumber() {
         Random rand = new Random();
         return "AZ" + (10000000 + rand.nextInt(90000000));

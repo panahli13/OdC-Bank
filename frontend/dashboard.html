@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OdC Bank - Premium Banking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Corporate Theme Variables */
+            --primary: #1e40af;
+            /* Deep Blue */
+            --primary-hover: #1e3a8a;
+            --secondary: #3b82f6;
+            /* Blue 500 */
+            --bg-body: #f3f4f6;
+            /* Light Gray */
+            --bg-panel: #ffffff;
+            /* White */
+            --bg-sidebar: #0f172a;
+            /* Dark Navy */
+            --text-main: #1e293b;
+            /* Slate 800 */
+            --text-muted: #64748b;
+            /* Slate 500 */
+            --text-dim: #64748b;
+            /* Compatibility Alias */
+            --border: #e2e8f0;
+            /* Light Border */
+            --surface: #ffffff;
+            /* Compatibility Alias */
+            --success: #10b981;
+            --danger: #ef4444;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+            /* Legacy/Sidebar vars */
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar - Keeping Dark for Contrast */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-sidebar);
+            color: #fff;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.05);
+            border-right: none;
+        }
+
+        .logo {
+            font-weight: 800;
+            margin-bottom: 50px;
+            color: #fff;
+            letter-spacing: -0.5px;
+            display: flex;
+            flex-direction: column;
+            /* Stack for large logo */
+            align-items: center;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .logo img {
+            width: 180px;
+            /* 3x larger (45px * 3) */
+            height: 180px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: transparent;
+        }
+
+        .nav-item {
+            padding: 14px 20px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #94a3b8;
+            /* Slate 400 */
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .logout {
+            margin-top: auto;
+            color: #fca5a5;
+        }
+
+        .logout:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .greeting h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .greeting p {
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .user-pill {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Panels */
+        .panel {
+            background: var(--bg-panel);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        h3,
+        h4 {
+            color: var(--text-main);
+        }
+
+        .wallet-card.show-details .balance-details {
+            display: block !important;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Reveal full number when details shown */
+        .wallet-card.show-details .card-numberable .masked {
+            display: none;
+        }
+
+        .wallet-card.show-details .card-numberable .full {
+            display: inline !important;
+        }
+
+        .wallet-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .wallet-card:active {
+            transform: scale(0.98);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Wallet Card */
+        .wallet-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 24px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(79, 70, 229, 0.3);
+            margin-bottom: 40px;
+        }
+
+        .wallet-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent 70%);
+            border-radius: 50%;
+        }
+
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .total-balance {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .mini-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            font-size: 13px;
+            font-weight: 500;
+            transition: transform 0.2s;
+        }
+
+        .mini-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        /* Lists */
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-left h4 {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .item-left p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .amount {
+            font-weight: 600;
+        }
+
+        .amount.plus {
+            color: var(--success);
+        }
+
+        .amount.minus {
+            color: var(--text-light);
+        }
+
+        /* Cards List */
+        .card-preview {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-preview.GOLD {
+            background: linear-gradient(135deg, #d97706, #fbbf24);
+            color: black;
+        }
+
+        .card-preview.PLATINUM {
+            background: linear-gradient(135deg, #374151, #111827);
+            border: 1px solid #6b7280;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .message.success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Card Carousel */
+        .card-carousel {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 10px 5px 20px 5px;
+            /* Bottom padding for shadow */
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .card-carousel::-webkit-scrollbar {
+            display: none;
+            /* Chrome/Safari */
+        }
+
+        .card-carousel .wallet-card {
+            scroll-snap-align: center;
+            min-width: 100% !important;
+            /* Force single card */
+            flex: 0 0 100%;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            margin-right: 0 !important;
+        }
+
+        .card-carousel .wallet-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4) !important;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="logo.png" alt="Logo">
+            OdC Bank
+        </div>
+        <div class="nav-item active" onclick="showSection('dashboard')">📊 Dashboard</div>
+        <div class="nav-item" onclick="showSection('transfer')">💸 Transfer</div>
+        <div class="nav-item" onclick="showSection('bill-payments')">⚡ Bill Payments</div>
+        <div class="nav-item" onclick="showSection('savings')">🎯 Savings Goals</div>
+        <div class="nav-item" onclick="showSection('cards')">💳 My Cards</div>
+        <div class="nav-item" onclick="showSection('credits')">🏦 Loans</div>
+
+        <div class="nav-item logout" onclick="logout()">🚪 Logout</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="header">
+            <div class="greeting">
+                <h1 id="greetingText">Welcome back</h1>
+                <p>Manage your finances with premium confidence.</p>
+            </div>
+            <div class="user-pill">
+                <span id="navEmail">loading...</span>
+                <span>|</span>
+                <span id="navAccNum">....</span>
+            </div>
+        </div>
+
+        <!-- DASHBOARD SECTION -->
+        <div id="dashboard" class="section active">
+            <div class="grid-2">
+                <div>
+                    <!-- Bank Card Visual -->
+                    <!-- Mini Balance Widget -->
+                    <!-- Bank Card Visual -->
+                    <!-- Mini Balance Widget -->
+                    <div class="panel"
+                        style="padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Total
+                                Balance</div>
+                            <h1 style="font-size: 42px; margin: 10px 0; color: var(--primary);">
+                                <span id="mainBalance">0.00</span> <span style="font-size: 20px;">AZN</span>
+                            </h1>
+                            <div style="font-size: 14px; opacity: 0.8; margin-bottom: 20px;">
+                                Bonus: <span id="bonusBalance">0.00</span> AZN
+                                <button id="claimBonusBtn" class="mini-btn hidden" onclick="claimBonus()"
+                                    style="padding: 2px 8px; font-size: 10px; margin-left: 10px; background: var(--success);">Claim</button>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-primary" onclick="showSection('transfer')">Send</button>
+                            <button class="btn-primary" onclick="showSection('exchange')">Swap</button>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Cards Section -->
+                    <div style="margin-bottom: 40px;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3 style="font-size: 18px; font-weight: 600;">My Cards</h3>
+                            <button onclick="showSection('cards')"
+                                style="background: none; border: none; color: var(--primary); cursor: pointer;">Manage</button>
+                        </div>
+
+                        <!-- Cards Carousel/Grid -->
+                        <!-- Cards Carousel/Grid -->
+                        <div
+                            style="position: relative; display: flex; align-items: center; max-width: 380px; margin: 0 auto;">
+                            <button onclick="scrollCards(-1)"
+                                style="position: absolute; left: -15px; z-index: 20; background: var(--surface); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">❮</button>
+
+                            <div id="cardsMiniList" class="card-carousel" style="width: 100%; scroll-padding: 0 20px;">
+                                <div style="text-align: center; width: 100%; color: var(--text-dim);">Loading Cards...
+                                </div>
+                            </div>
+
+                            <button onclick="scrollCards(1)"
+                                style="position: absolute; right: -15px; z-index: 20; background: var(--surface); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">❯</button>
+                        </div>
+                    </div>
+
+                    <div class="panel" style="margin-bottom: 30px;">
+                        <h3>Quick Exchange</h3>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Amount</label>
+                                <input type="number" id="quickExAmount" class="input-field" placeholder="100">
+                            </div>
+                            <div class="form-group">
+                                <label>Pay With</label>
+                                <select id="quickExCard" class="input-field">
+                                    <option value="">Main Account</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>From</label>
+                                <select id="quickExFrom" class="input-field">
+                                    <option value="AZN">AZN</option>
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>To</label>
+                                <select id="quickExTarget" class="input-field">
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                    <option value="AZN">AZN</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn-primary" onclick="quickExchange()">Convert Now</button>
+                        <div id="quickExMsg" class="message hidden"></div>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Recent Transactions</h3>
+                        <div id="txList">
+                            <div style="text-align: center; padding: 20px; color: var(--text-dim)">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 30px;">
+                    <div class="panel">
+                        <h3>My Cards</h3>
+                        <div id="cardsMiniList">Loading...</div>
+                        <button class="btn-primary"
+                            style="margin-top: 20px; background: transparent; border: 1px solid var(--primary); color: var(--primary);"
+                            onclick="showSection('cards')">Manage Cards</button>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <!-- TRANSFER SECTION -->
+        <div id="transfer" class="section">
+            <div class="panel" style="max-width: 600px; margin: 0 auto;">
+                <h3>Transfer Money</h3>
+                <div class="form-group">
+                    <label>From</label>
+                    <select id="trFrom" class="input-field">
+                        <option value="MAIN">Main Account</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Recipient Card Number (16 digits or last 8)</label>
+                    <input type="text" id="trTo" class="input-field" maxlength="16" placeholder="1234567812345678">
+                </div>
+                <div class="form-group">
+                    <label>Amount (AZN)</label>
+                    <input type="number" id="trAmount" class="input-field" placeholder="0.00">
+                </div>
+                <button class="btn-primary" onclick="doTransfer()">Confirm Transfer</button>
+                <div id="trMsg" class="message hidden"></div>
+            </div>
+        </div>
+
+        <!-- BILL PAYMENT SECTION -->
+        <div id="bill-payments" class="section">
+            <h3 style="margin-bottom: 20px;">Choose Category</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px;">
+                <div class="panel" onclick="setupBill('Mobile', 'Azercell')"
+                    style="cursor:pointer; text-align:center; padding: 15px;">
+                    <div style="font-size: 32px; margin-bottom: 10px;">📱</div>
+                    <div style="font-weight:600">Mobile</div>
+                    <div style="font-size: 11px; color:var(--text-dim)">Azercell, Bakcell</div>
+                </div>
+                <div class="panel" onclick="setupBill('Utility', 'Azerishiq')"
+                    style="cursor:pointer; text-align:center; padding: 15px;">
+                    <div style="font-size: 32px; margin-bottom: 10px;">💡</div>
+                    <div style="font-weight:600">Utilities</div>
+                    <div style="font-size: 11px; color:var(--text-dim)">Light, Gas, Water</div>
+                </div>
+                <div class="panel" onclick="setupBill('Internet', 'CityNet')"
+                    style="cursor:pointer; text-align:center; padding: 15px;">
+                    <div style="font-size: 32px; margin-bottom: 10px;">🌐</div>
+                    <div style="font-weight:600">Internet</div>
+                    <div style="font-size: 11px; color:var(--text-dim)">CityNet, KATV</div>
+                </div>
+                <div class="panel" onclick="setupBill('TV', 'Aile TV')"
+                    style="cursor:pointer; text-align:center; padding: 15px;">
+                    <div style="font-size: 32px; margin-bottom: 10px;">📺</div>
+                    <div style="font-weight:600">TV</div>
+                    <div style="font-size: 11px; color:var(--text-dim)">Aile, ATV+, Connect</div>
+                </div>
+
+                <div class="panel" onclick="setupBill('Insurance', 'Pasha')"
+                    style="cursor:pointer; text-align:center; padding: 15px;">
+                    <div style="font-size: 32px; margin-bottom: 10px;">🛡️</div>
+                    <div style="font-weight:600">Insurance</div>
+                    <div style="font-size: 11px; color:var(--text-dim)">Pasha, Ateshgah</div>
+                </div>
+                <div class="panel" onclick="setupBill('Charity', 'YAŞAT')"
+                    style="cursor:pointer; text-align:center; padding: 15px;">
+                    <div style="font-size: 32px; margin-bottom: 10px;">❤️</div>
+                    <div style="font-weight:600">Charity</div>
+                    <div style="font-size: 11px; color:var(--text-dim)">YAŞAT, Red Crescent</div>
+                </div>
+            </div>
+
+            <div id="billFormPanel" class="panel hidden" style="max-width: 600px; margin: 30px auto;">
+                <h3 id="billTitle">Pay Bill</h3>
+                <!-- Generic Input -->
+                <div id="genericBillInput">
+                    <div class="form-group">
+                        <label>Subscriber ID / Number</label>
+                        <input type="text" id="billTarget" class="input-field" placeholder="Number">
+                    </div>
+                </div>
+
+                <!-- Mobile Specific Input -->
+                <div id="mobileBillInput" class="hidden">
+                    <div class="form-group">
+                        <label>Operator</label>
+                        <select id="mobileOperator" class="input-field" onchange="updatePrefixes()">
+                            <option value="Azercell">Azercell</option>
+                            <option value="Bakcell">Bakcell</option>
+                            <option value="Nar">Nar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <div style="display: flex; gap: 10px;">
+                            <select id="mobilePrefix" class="input-field" style="width: 100px;">
+                                <!-- Populated by JS -->
+                            </select>
+                            <input type="text" id="mobileNumber" class="input-field" placeholder="123 45 67"
+                                maxlength="7">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Utility Specific Input -->
+                <div id="utilityBillInput" class="hidden">
+                    <div class="form-group">
+                        <label>Service Provider</label>
+                        <select id="utilityProvider" class="input-field">
+                            <option value="Azerishiq">Azerishiq</option>
+                            <option value="Azerqaz">Azerqaz</option>
+                            <option value="Azersu">Azersu</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Subscriber Code (Abonent kodu)</label>
+                        <input type="text" id="utilityCode" class="input-field" placeholder="12-34-567-8">
+                    </div>
+                </div>
+
+                <!-- Internet Specific Input -->
+                <div id="internetBillInput" class="hidden">
+                    <div class="form-group">
+                        <label>Provider</label>
+                        <select id="internetProvider" class="input-field">
+                            <option value="Aztelekom">Aztelekom</option>
+                            <option value="Baktelekom">Baktelekom</option>
+                            <option value="CityNet">CityNet</option>
+                            <option value="KATV">KATV</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Account Number</label>
+                        <input type="text" id="internetAccount" class="input-field" placeholder="Account No">
+                    </div>
+                </div>
+
+                <!-- TV Specific Input -->
+                <div id="tvBillInput" class="hidden">
+                    <div class="form-group">
+                        <label>TV Provider</label>
+                        <select id="tvProvider" class="input-field">
+                            <option value="Aile TV">Aile TV</option>
+                            <option value="ATV+">ATV+</option>
+                            <option value="Connect">Connect</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Subscriber Code</label>
+                        <input type="text" id="tvSubscriber" class="input-field" placeholder="123456">
+                    </div>
+                </div>
+
+                <!-- Insurance Specific Input -->
+                <div id="insuranceBillInput" class="hidden">
+                    <div class="form-group">
+                        <label>Insurance Company</label>
+                        <select id="insuranceProvider" class="input-field">
+                            <option value="Ateshgah">Ateshgah</option>
+                            <option value="Pasha">Pasha</option>
+                            <option value="Atasigorta">Atasigorta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Policy Number / PIN</label>
+                        <input type="text" id="insuranceRef" class="input-field" placeholder="Policy No">
+                    </div>
+                </div>
+
+                <!-- Charity Specific Input -->
+                <div id="charityBillInput" class="hidden">
+                    <div class="form-group">
+                        <label>Organization</label>
+                        <select id="charityProvider" class="input-field">
+                            <option value="YAŞAT">YAŞAT</option>
+                            <option value="Red Crescent">Red Crescent</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Purpose (Optional)</label>
+                        <input type="text" id="charityPurpose" class="input-field" placeholder="Donation">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" id="billAmount" class="input-field" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="billPaymentMethod" class="input-field">
+                        <option value="">Main Account</option>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="payBill()">Pay Now</button>
+                <div id="billMsg" class="message hidden"></div>
+            </div>
+        </div>
+
+        <!-- CARDS SECTION -->
+        <div id="cards" class="section">
+            <div class="grid-2">
+                <div class="panel">
+                    <h3>Your Active Cards</h3>
+                    <div id="fullCardList">...</div>
+                </div>
+                <div class="panel">
+                    <h3>Order New Card</h3>
+                    <div class="form-group">
+                        <label>Card Type</label>
+                        <select id="newCardType" class="input-field" onchange="toggleExternalCardInput()">
+                            <option value="DEBIT">Classic Debit (Free)</option>
+                            <option value="GOLD">Gold Premium (10 AZN)</option>
+                            <option value="PLATINUM">Platinum Business (50 AZN)</option>
+                            <option value="EXTERNAL">Link Other Bank Card</option>
+                        </select>
+                    </div>
+                    <div class="form-group hidden" id="externalCardInput">
+                        <label>External Card Number</label>
+                        <input type="text" id="extCardNum" class="input-field" placeholder="1234 5678 1234 5678"
+                            maxlength="19">
+                    </div>
+                    <button class="btn-primary" onclick="handleCardAction()">Proceed</button>
+                    <div id="cardMsg" class="message hidden"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SAVINGS GOAL SECTION -->
+        <div id="savings" class="section">
+            <div class="panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>My Savings Goals</h3>
+                    <button class="btn-primary" style="width: auto; padding: 8px 15px;"
+                        onclick="document.getElementById('createGoalModal').classList.remove('hidden')">+ New
+                        Goal</button>
+                </div>
+                <div id="goalsList" class="grid-2">
+                    <div style="text-align:center; width:100%; opacity:0.6;">Loading goals...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LOANS SECTION -->
+        <div id="credits" class="section">
+            <div class="grid-2">
+                <div class="panel">
+                    <h3>My Active Loans</h3>
+                    <div id="loanList">Loading...</div>
+                </div>
+                <div class="panel">
+                    <h3>Apply for Loan</h3>
+                    <div class="form-group">
+                        <label>Amount (AZN)</label>
+                        <input type="number" id="loanP" class="input-field" placeholder="1000">
+                    </div>
+                    <div class="form-group">
+                        <label>Select Card for Funds</label>
+                        <select id="loanCardSelect" class="input-field">
+                            <option value="">Main Account Balance</option>
+                        </select>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Term (Months)</label>
+                            <input type="number" id="loanT" class="input-field" value="12">
+                        </div>
+                        <div class="form-group">
+                            <label>Rate (%)</label>
+                            <input type="number" id="loanR" class="input-field" value="14" readonly>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="applyLoan()">Apply Now</button>
+                    <div id="loanMsg" class="message hidden"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Create Goal Modal -->
+    <div id="createGoalModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Create New Savings Goal</h3>
+            <div class="form-group">
+                <label>Goal Name</label>
+                <input type="text" id="goalName" class="input-field" placeholder="e.g. New Car">
+            </div>
+            <div class="form-group">
+                <label>Target Amount (AZN)</label>
+                <input type="number" id="goalTarget" class="input-field" placeholder="1000">
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-primary" onclick="createSavingsGoal()">Create Goal</button>
+                <button class="btn-primary" style="background:var(--error);"
+                    onclick="document.getElementById('createGoalModal').classList.add('hidden')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deposit Modal -->
+    <div id="depositModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Add Money to Goal</h3>
+            <div class="form-group">
+                <label>Source</label>
+                <select id="depositSource" class="input-field">
+                    <option value="">Main Account Balance</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Amount (AZN)</label>
+                <input type="number" id="depositAmount" class="input-field" placeholder="0.00">
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-primary" onclick="confirmDeposit()">Deposit</button>
+                <button class="btn-primary" style="background:var(--error);"
+                    onclick="closeDepositModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Goal Modal -->
+    <div id="deleteGoalModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Delete Savings Goal</h3>
+            <p>Any remaining funds will be refunded.</p>
+            <div class="form-group">
+                <label>Refund To</label>
+                <select id="refundSource" class="input-field">
+                    <option value="">Main Account Balance</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-primary" style="background:var(--error);" onclick="confirmDeleteGoal()">Delete &
+                    Refund</button>
+                <button class="btn-primary" onclick="closeDeleteGoalModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API = 'http://localhost:8080';
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'index.html';
+
+        let myAccount = null;
+        let selectedBillProvider = '';
+
+        function formatCardNumber(num) {
+            if (!num) return '****';
+            return num.toString().match(/.{1,4}/g).join(' ');
+        }
+
+        function scrollCards(direction) {
+            const container = document.getElementById('cardsMiniList');
+            const cardWidth = container.offsetWidth;
+            container.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
+        }
+
+        function toggleCvv(e, el, code) {
+            e.stopPropagation();
+            if (el.textContent === '***') {
+                el.textContent = code;
+            } else {
+                el.textContent = '***';
+            }
+        }
+
+        // Init
+        async function init() {
+            try {
+                // Decode Email for Greeting
+                // Decode Email for Greeting (Fallback)
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                let displayName = payload.sub.split('@')[0];
+                document.getElementById('navEmail').textContent = payload.sub;
+                document.getElementById('greetingText').textContent = `Welcome, ${displayName}`;
+
+                // Fetch User Profile for Real Name
+                try {
+                    const userRes = await fetch(`${API}/users/me`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    if (userRes.ok) {
+                        const userData = await userRes.json();
+                        if (userData.fullname && userData.fullname.trim().length > 0) {
+                            // Use first word of fullname
+                            displayName = userData.fullname.trim().split(' ')[0];
+                            // Capitalize first letter just in case
+                            displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1).toLowerCase();
+                            document.getElementById('greetingText').textContent = `Welcome, ${displayName}`;
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Failed to fetch user profile", e);
+                }
+
+                // Load Account
+                const res = await fetch(`${API}/accounts/my-account`, { headers: { 'Authorization': `Bearer ${token}` } });
+                if (res.ok) {
+                    myAccount = await res.json();
+                    document.getElementById('navAccNum').textContent = myAccount.accountNumber;
+                    document.getElementById('mainBalance').textContent = myAccount.balance.toFixed(2);
+                    const bonus = myAccount.bonusBalance || 0;
+                    document.getElementById('bonusBalance').textContent = bonus.toFixed(2);
+
+                    const claimBtn = document.getElementById('claimBonusBtn');
+                    if (claimBtn) {
+                        if (bonus > 0.01) {
+                            claimBtn.classList.remove('hidden');
+                        } else {
+                            claimBtn.classList.add('hidden');
+                        }
+                    }
+
+                    // Load other data sequentially to avoid race conditions
+                    await loadTransactions();
+                    await loadCards();
+                    await loadLoans();
+                    await loadSavingsGoals();
+                } else {
+                    document.getElementById('mainBalance').textContent = "---";
+                    msg('greetingText', 'Backend connection failed', true);
+                }
+            } catch (e) {
+                console.error(e);
+                document.getElementById('mainBalance').textContent = "Error";
+                msg('greetingText', 'Connection Error: ' + e.message, true);
+            }
+        }
+        // Navigation
+        function showSection(id) {
+            if (!id) id = 'dashboard';
+            const sec = document.getElementById(id);
+            if (!sec) {
+                console.warn("Section not found:", id);
+                showSection('dashboard');
+                return;
+            }
+
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            sec.classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+            // Highlight the correct nav item
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                const txt = item.textContent.toLowerCase();
+                if (txt.includes(id) || (id === 'payments' && txt.includes('bill')) || (id === 'credits' && txt.includes('loans'))) {
+                    item.classList.add('active');
+                }
+            });
+
+            localStorage.setItem('lastSection', id);
+        }
+
+        // Init Sequence
+        window.addEventListener('DOMContentLoaded', () => {
+            // 1. Restore Section
+            const last = localStorage.getItem('lastSection');
+            showSection(last || 'dashboard');
+
+            // 2. Load Data
+            init();
+        });
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        function msg(id, text, isErr) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = text;
+            el.className = `message ${isErr ? 'error' : 'success'}`;
+            el.classList.remove('hidden');
+            setTimeout(() => el.classList.add('hidden'), 4000);
+        }
+
+        // --- FEATURES ---
+
+        async function doTransfer() {
+            const from = document.getElementById('trFrom').value;
+            const to = document.getElementById('trTo').value;
+            const amt = document.getElementById('trAmount').value;
+            if (!to || !amt) return;
+
+            let url;
+            if (from === 'MAIN') {
+                // Main Account -> Card
+                url = `${API}/transactions/transfer-to-card?fromAccountId=${myAccount.id}&targetCardNumber=${to}&amount=${amt}`;
+            } else {
+                // Card -> Card
+                url = `${API}/transactions/card-to-card?fromCardId=${from}&targetCardNumber=${to}&amount=${amt}`;
+            }
+
+            const res = await fetch(url, {
+                method: 'POST', headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            const text = await res.text();
+            msg('trMsg', res.ok ? 'Transfer successful' : (text || 'Failed'), !res.ok);
+            if (res.ok) {
+                document.getElementById('trTo').value = '';
+                document.getElementById('trAmount').value = '';
+                init();
+            }
+        }
+
+        async function loadTransactions() {
+            const res = await fetch(`${API}/accounts/my-account/transactions`, { headers: { 'Authorization': `Bearer ${token}` } });
+            if (res.ok) {
+                const txs = await res.json();
+                document.getElementById('txList').innerHTML = txs.length ? txs.map(t => {
+                    const isOut = t.fromAccountId === myAccount.id;
+                    return `
+                    <div class="list-item">
+                        <div class="item-left">
+                            <h4>${isOut ? 'Sent Money' : 'Received Money'}</h4>
+                            <p>${t.reference} • ${new Date(t.createdAt).toLocaleDateString()}</p>
+                        </div>
+                        <div class="amount ${isOut ? 'minus' : 'plus'}">
+                            ${isOut ? '-' : '+'}${t.amount} AZN
+                        </div>
+                    </div>`;
+                }).join('') : '<div style="text-align:center; padding:10px; opacity:0.6">No transactions found</div>';
+            }
+        }
+
+        // Bill Payment
+        const prefixes = {
+            'Azercell': ['050', '051', '010'],
+            'Bakcell': ['055', '099'],
+            'Nar': ['070', '077']
+        };
+
+        function updatePrefixes() {
+            const op = document.getElementById('mobileOperator').value;
+            const prefixSel = document.getElementById('mobilePrefix');
+            if (prefixes[op]) {
+                prefixSel.innerHTML = prefixes[op].map(p => `<option value="${p}">${p}</option>`).join('');
+            }
+        }
+
+        function setupBill(type, provider) {
+            selectedBillProvider = provider;
+
+            const isMobile = type === 'Mobile';
+            const isUtility = type === 'Utilities' || type === 'Utility'; // Handle 'Utilities' label or 'Utility' type passed from onclick
+            const isInternet = type === 'Internet';
+            const isTV = type === 'TV';
+            const isInsurance = type === 'Insurance';
+            const isCharity = type === 'Charity';
+
+            const genericInput = document.getElementById('genericBillInput');
+            const mobileInput = document.getElementById('mobileBillInput');
+            const utilityInput = document.getElementById('utilityBillInput');
+            const internetInput = document.getElementById('internetBillInput');
+            const tvInput = document.getElementById('tvBillInput');
+            const insuranceInput = document.getElementById('insuranceBillInput');
+            const charityInput = document.getElementById('charityBillInput');
+
+            // Reset all
+            genericInput.classList.add('hidden');
+            mobileInput.classList.add('hidden');
+            utilityInput.classList.add('hidden');
+            if (internetInput) internetInput.classList.add('hidden');
+            if (tvInput) tvInput.classList.add('hidden');
+            if (insuranceInput) insuranceInput.classList.add('hidden');
+            if (charityInput) charityInput.classList.add('hidden');
+
+            if (isMobile) {
+                document.getElementById('billTitle').textContent = `Pay Mobile (${provider || 'Azercell'})`;
+                mobileInput.classList.remove('hidden');
+
+                if (provider && prefixes[provider]) {
+                    document.getElementById('mobileOperator').value = provider;
+                } else {
+                    document.getElementById('mobileOperator').value = 'Azercell';
+                }
+                updatePrefixes();
+            } else if (isUtility) {
+                document.getElementById('billTitle').textContent = `Pay Utility`;
+                utilityInput.classList.remove('hidden');
+
+                // Allow passed provider to select dropdown if valid
+                const validProviders = ['Azerishiq', 'Azerqaz', 'Azersu'];
+                if (provider && validProviders.includes(provider)) {
+                    document.getElementById('utilityProvider').value = provider;
+                }
+            } else if (isInternet) {
+                document.getElementById('billTitle').textContent = `Pay Internet`;
+                if (internetInput) internetInput.classList.remove('hidden');
+
+                const validNet = ['Aztelekom', 'Baktelekom', 'CityNet', 'KATV'];
+                if (provider && validNet.includes(provider)) {
+                    document.getElementById('internetProvider').value = provider;
+                }
+            } else if (isTV) {
+                document.getElementById('billTitle').textContent = `Pay TV`;
+                if (tvInput) tvInput.classList.remove('hidden');
+
+                const validTV = ['Aile TV', 'ATV+', 'Connect'];
+                if (provider && validTV.includes(provider)) {
+                    document.getElementById('tvProvider').value = provider;
+                }
+            } else if (isInsurance) {
+                document.getElementById('billTitle').textContent = `Pay Insurance`;
+                if (insuranceInput) insuranceInput.classList.remove('hidden');
+
+                const validIns = ['Ateshgah', 'Pasha', 'Atasigorta'];
+                if (provider && validIns.includes(provider)) {
+                    document.getElementById('insuranceProvider').value = provider;
+                }
+            } else if (isCharity) {
+                document.getElementById('billTitle').textContent = `Donate to Charity`;
+                if (charityInput) charityInput.classList.remove('hidden');
+
+                const validCharity = ['YAŞAT', 'Red Crescent'];
+                if (provider && validCharity.includes(provider)) {
+                    document.getElementById('charityProvider').value = provider;
+                }
+            } else {
+                document.getElementById('billTitle').textContent = `Pay ${provider} (${type})`;
+                genericInput.classList.remove('hidden');
+            }
+
+            document.getElementById('billFormPanel').classList.remove('hidden');
+        }
+
+        async function payBill() {
+            let target = '';
+            const amt = document.getElementById('billAmount').value;
+
+            const isMobile = !document.getElementById('mobileBillInput').classList.contains('hidden');
+            const isUtility = !document.getElementById('utilityBillInput').classList.contains('hidden');
+            const internetInput = document.getElementById('internetBillInput');
+            const isInternet = internetInput && !internetInput.classList.contains('hidden');
+            const tvInput = document.getElementById('tvBillInput');
+            const isTV = tvInput && !tvInput.classList.contains('hidden');
+            const insuranceInput = document.getElementById('insuranceBillInput');
+            const isInsurance = insuranceInput && !insuranceInput.classList.contains('hidden');
+            const charityInput = document.getElementById('charityBillInput');
+            const isCharity = charityInput && !charityInput.classList.contains('hidden');
+
+            if (isMobile) {
+                const prefix = document.getElementById('mobilePrefix').value;
+                const number = document.getElementById('mobileNumber').value;
+                if (!number || number.length < 7) {
+                    msg('billMsg', 'Invalid Mobile Number (7 digits)', true);
+                    return;
+                }
+                target = `(${prefix}) ${number}`;
+                selectedBillProvider = document.getElementById('mobileOperator').value;
+            } else if (isUtility) {
+                const code = document.getElementById('utilityCode').value;
+                if (!code || code.length < 3) {
+                    msg('billMsg', 'Invalid Subscriber Code', true);
+                    return;
+                }
+                target = code;
+                selectedBillProvider = document.getElementById('utilityProvider').value;
+            } else if (isInternet) {
+                const acc = document.getElementById('internetAccount').value;
+                if (!acc || acc.length < 3) {
+                    msg('billMsg', 'Invalid Account Number', true);
+                    return;
+                }
+                target = acc;
+                selectedBillProvider = document.getElementById('internetProvider').value;
+            } else if (isTV) {
+                const sub = document.getElementById('tvSubscriber').value;
+                if (!sub || sub.length < 3) {
+                    msg('billMsg', 'Invalid Subscriber Code', true);
+                    return;
+                }
+                target = sub;
+                selectedBillProvider = document.getElementById('tvProvider').value;
+            } else if (isInsurance) {
+                const pol = document.getElementById('insuranceRef').value;
+                if (!pol || pol.length < 3) {
+                    msg('billMsg', 'Invalid Policy Number', true);
+                    return;
+                }
+                target = pol;
+                selectedBillProvider = document.getElementById('insuranceProvider').value;
+            } else if (isCharity) {
+                const purp = document.getElementById('charityPurpose').value;
+                target = purp || 'General Donation';
+                selectedBillProvider = document.getElementById('charityProvider').value;
+            } else {
+                target = document.getElementById('billTarget').value;
+            }
+
+            if (!target || !amt) {
+                msg('billMsg', 'Please enter details and amount', true);
+                return;
+            }
+
+            const details = `${selectedBillProvider} Payment for ${target}`;
+
+            let url = `${API}/bill-payment?accountId=${myAccount.id}&amount=${amt}&billDetails=${encodeURIComponent(details)}`;
+
+            const method = document.getElementById('billPaymentMethod').value;
+            if (method) {
+                // If method is not empty, it's a card ID
+                url += `&cardId=${method}`;
+            }
+
+            const res = await fetch(url, {
+                method: 'POST', headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const text = await res.text();
+            msg('billMsg', res.ok ? 'Payment Successful' : (text || 'Failed'), !res.ok);
+            if (res.ok) {
+                document.getElementById('billAmount').value = '';
+                document.getElementById('billTarget').value = '';
+                document.getElementById('mobileNumber').value = '';
+                document.getElementById('utilityCode').value = '';
+                if (document.getElementById('internetAccount')) document.getElementById('internetAccount').value = '';
+                if (document.getElementById('tvSubscriber')) document.getElementById('tvSubscriber').value = '';
+                if (document.getElementById('insuranceRef')) document.getElementById('insuranceRef').value = '';
+                if (document.getElementById('charityPurpose')) document.getElementById('charityPurpose').value = '';
+                init();
+            }
+        }
+
+        // Cards
+        async function loadCards() {
+            try {
+                if (!myAccount || !myAccount.id) return;
+
+                const res = await fetch(`${API}/cards/account/${myAccount.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                if (!res.ok) throw new Error("Failed to fetch cards");
+
+                const cards = await res.json();
+                if (!Array.isArray(cards)) return;
+
+                // Safe Username derivation
+                const navEmailEl = document.getElementById('navEmail');
+                const navEmail = navEmailEl ? navEmailEl.textContent : 'USER';
+                const userName = navEmail && navEmail.includes('@') ? navEmail.split('@')[0].toUpperCase() : 'USER';
+
+                // Calculate Total Balance (Internal Cards)
+                let totalBalance = 0;
+                cards.forEach(c => {
+                    if (['DEBIT', 'GOLD', 'PLATINUM'].includes(c.cardType)) {
+                        totalBalance += Number(c.balance || 0);
+                    }
+                });
+
+                // Update Main Balance Display
+                const mainBalEl = document.getElementById('mainBalance');
+                if (mainBalEl) mainBalEl.textContent = totalBalance.toFixed(2);
+
+                const html = cards.length ? cards.map(c => {
+                    // Safe Balances
+                    const azn = Number(c.balance || 0).toFixed(2);
+                    const usd = Number(c.balanceUsd || 0).toFixed(2);
+                    const eur = Number(c.balanceEur || 0).toFixed(2);
+
+                    // Card Styling
+                    let bgStyle = 'background: linear-gradient(135deg, var(--primary), var(--secondary));';
+                    let textColor = 'white';
+
+                    if (c.cardType === 'GOLD') {
+                        bgStyle = 'background: linear-gradient(135deg, #d97706, #fbbf24);';
+                        textColor = 'black';
+                    } else if (c.cardType === 'PLATINUM') {
+                        bgStyle = 'background: linear-gradient(135deg, #334155, #0f172a); border: 1px solid rgba(255,255,255,0.2);';
+                    } else if (c.cardType === 'EXTERNAL') {
+                        bgStyle = 'background: linear-gradient(135deg, #059669, #10b981);';
+                    }
+
+                    const logoColor = textColor;
+                    const cardNumDisplay = c.cardNumber ? (formatCardNumber ? formatCardNumber(c.cardNumber) : c.cardNumber) : '****';
+                    // Masking logic: **** **** 1234 5678 -> Show first 8 masked
+                    const maskedNum = cardNumDisplay.replace(/^\d{4}\s\d{4}/, '**** ****');
+
+                    return `
+                    <div class="wallet-card" style="${bgStyle} min-width: 100%; aspect-ratio: 1.586; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; margin-right: 0; box-shadow: 0 10px 20px rgba(0,0,0,0.3); position: relative; color: ${textColor};" onclick="this.classList.toggle('show-details')">
+                        <button onclick="event.stopPropagation(); removeCard(${c.id})" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.3); border: none; color: ${textColor}; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; z-index:10;">✕</button>
+
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div class="logo" style="font-size: 16px; margin: 0; color: ${logoColor}; font-weight:bold;">OdC Bank</div>
+                            <div style="font-size: 14px; opacity: 0.8;">${c.cardType}</div>
+                        </div>
+                        
+                        <div style="margin: 20px 0; font-family: monospace; font-size: 18px; letter-spacing: 2px;" class="card-numberable">
+                            <span class="masked">${maskedNum}</span>
+                            <span class="full hidden">${cardNumDisplay}</span>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: end;">
+                            <div>
+                                <div class="balance-main">
+                                    <div style="font-size: 10px; opacity: 0.7; text-transform: uppercase;">Balance (AZN)</div>
+                                    <div style="font-size: 20px; font-weight: 700;">${azn} ₼</div>
+                                </div>
+                                <div class="balance-details" style="display:none; margin-top:5px; font-size:14px;">
+                                    <div>USD: $${usd}</div>
+                                    <div>EUR: €${eur}</div>
+                                    <div style="margin-top:5px; font-weight:bold; color: ${textColor}">
+                                        CVV: <span class="cvv-toggle" onclick="toggleCvv(event, this, '${c.cvv || '000'}')" style="cursor:pointer; background:rgba(255,255,255,0.2); padding:2px 5px; border-radius:3px;">***</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="font-size: 12px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">
+                                ${userName}
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                }).join('') : '<div style="text-align:center; padding:20px; opacity:0.6; width:100%">No active cards found. Order one!</div>';
+
+                const mini = document.getElementById('cardsMiniList');
+                const full = document.getElementById('fullCardList');
+                if (mini) mini.innerHTML = html;
+                if (full) full.innerHTML = html;
+
+                // Populate Dropdowns
+                const cardOptions = cards
+                    .filter(c => ['DEBIT', 'GOLD', 'PLATINUM'].includes(c.cardType))
+                    .map(c => {
+                        const azn = Number(c.balance || 0).toFixed(2);
+                        const usd = Number(c.balanceUsd || 0).toFixed(2);
+                        const eur = Number(c.balanceEur || 0).toFixed(2);
+                        return `<option value="${c.id}">${c.cardType} **** ${c.cardNumber.slice(-4)} (₼${azn} | $${usd} | €${eur})</option>`;
+                    })
+                    .join('');
+
+                const loanSelect = document.getElementById('loanCardSelect');
+                const trSelect = document.getElementById('trFrom');
+                const exSelect = document.getElementById('quickExCard');
+
+                if (loanSelect) loanSelect.innerHTML = '<option value="">Main Account Balance</option>' + cardOptions;
+                if (trSelect) trSelect.innerHTML = '<option value="MAIN">Main Account Balance</option>' + cardOptions;
+
+                if (exSelect) exSelect.innerHTML = '<option value="">Main Account Balance</option>' + cardOptions;
+
+                const billSelect = document.getElementById('billPaymentMethod');
+                if (billSelect) billSelect.innerHTML = '<option value="">Main Account Balance</option>' + cardOptions;
+
+                const depSelect = document.getElementById('depositSource');
+                if (depSelect) depSelect.innerHTML = '<option value="">Main Account Balance</option>' + cardOptions;
+
+                const refSelect = document.getElementById('refundSource');
+                if (refSelect) refSelect.innerHTML = '<option value="">Main Account Balance</option>' + cardOptions;
+
+            } catch (e) {
+                console.error("Card Load Error:", e);
+                const mini = document.getElementById('cardsMiniList');
+                if (mini) mini.innerHTML = `<div style="color:red; text-align:center;">Error loading cards: ${e.message}</div>`;
+            }
+        }
+
+        let cardToDeleteId = null;
+
+        function removeCard(id) {
+            cardToDeleteId = id;
+            document.getElementById('deleteModal').classList.remove('hidden');
+            // Auto-fill email from the navbar
+            const currentEmail = document.getElementById('navEmail').textContent;
+            if (currentEmail && currentEmail !== 'loading...') {
+                document.getElementById('delEmail').value = currentEmail;
+            }
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+            cardToDeleteId = null;
+            document.getElementById('delEmail').value = '';
+            document.getElementById('delPass').value = '';
+        }
+
+        async function confirmDeleteCard() {
+            const email = document.getElementById('delEmail').value;
+            const pass = document.getElementById('delPass').value;
+
+            if (!email || !pass) {
+                alert("Please enter email and password");
+                return;
+            }
+
+            const res = await fetch(`${API}/cards/delete?cardId=${cardToDeleteId}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(pass)}`, {
+                method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const text = await res.text();
+
+            msg('cardMsg', res.ok ? 'Card removed' : (text || 'Failed to verify credentials'), !res.ok);
+            closeDeleteModal();
+            if (res.ok) loadCards();
+        }
+
+        function toggleExternalCardInput() {
+            const type = document.getElementById('newCardType').value;
+            const extInput = document.getElementById('externalCardInput');
+            if (type === 'EXTERNAL') extInput.classList.remove('hidden');
+            else extInput.classList.add('hidden');
+        }
+
+        async function handleCardAction() {
+            const type = document.getElementById('newCardType').value;
+
+            if (type === 'EXTERNAL') {
+                const num = document.getElementById('extCardNum').value.replace(/\s/g, '');
+                if (num.length < 16) { msg('cardMsg', 'Invalid Card Number', true); return; }
+
+                const res = await fetch(`${API}/cards/add-external?accountId=${myAccount.id}&cardNumber=${num}&cardType=EXTERNAL`, {
+                    method: 'POST', headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const text = await res.text();
+                msg('cardMsg', res.ok ? 'External Card Linked!' : (text || 'Failed (Backend Error)'), !res.ok);
+
+                if (res.ok) loadCards();
+
+            } else {
+                // Order Normal Card
+                const res = await fetch(`${API}/cards/create?accountId=${myAccount.id}&cardType=${type}`, {
+                    method: 'POST', headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const text = await res.text();
+                msg('cardMsg', res.ok ? 'Card Ordered Successfully' : (text || 'Failed'), !res.ok);
+
+                if (res.ok) loadCards();
+            }
+        }
+
+        // Exchange
+        async function doExchange() {
+            const from = document.getElementById('exFrom').value;
+            const to = document.getElementById('exTo').value;
+            const amt = document.getElementById('exAmount').value;
+
+            const res = await fetch(`${API}/exchange?accountId=${myAccount.id}&fromCurrency=${from}&toCurrency=${to}&amount=${amt}`, {
+                method: 'POST', headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const text = await res.text();
+            msg('exMsg', res.ok ? text : 'Exchange failed', !res.ok);
+            if (res.ok) init();
+        }
+
+        async function quickExchange() {
+            const amt = document.getElementById('quickExAmount').value;
+            const from = document.getElementById('quickExFrom').value;
+            const target = document.getElementById('quickExTarget').value;
+            const cardId = document.getElementById('quickExCard').value;
+
+            if (!amt) return;
+
+            let url = `${API}/exchange?accountId=${myAccount.id}&fromCurrency=${from}&toCurrency=${target}&amount=${amt}`;
+            if (cardId) url += `&cardId=${cardId}`;
+
+            const res = await fetch(url, {
+                method: 'POST', headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const text = await res.text();
+            msg('quickExMsg', res.ok ? text : 'Exchange failed', !res.ok);
+            if (res.ok) init();
+        }
+
+        // SAVINGS GOALS
+        let currentGoalId = null;
+
+        async function loadSavingsGoals() {
+            const res = await fetch(`${API}/savings/my-goals`, { headers: { 'Authorization': `Bearer ${token}` } });
+            if (res.ok) {
+                const goals = await res.json();
+                document.getElementById('goalsList').innerHTML = goals.length ? goals.map(g => {
+                    const pct = Math.min(100, (g.currentAmount / g.targetAmount) * 100);
+                    return `
+                    <div class="panel" style="border:1px solid var(--border);">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start">
+                            <div>
+                                <h4 style="margin:0">${g.name}</h4>
+                                <div style="font-size:12px; opacity:0.7">${g.status}</div>
+                            </div>
+                            <div style="text-align:right">
+                                <div style="font-size:16px; font-weight:bold">${g.currentAmount.toFixed(2)} / ${g.targetAmount.toFixed(2)} ₼</div>
+                                <div style="font-size:12px; color:${pct >= 100 ? 'var(--success)' : 'var(--primary)'}">${pct.toFixed(1)}%</div>
+                            </div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.1); height:6px; border-radius:3px; margin:10px 0; overflow:hidden">
+                            <div style="width:${pct}%; height:100%; background:${pct >= 100 ? 'var(--success)' : 'var(--primary)'}"></div>
+                        </div>
+                        <div style="display:flex; gap:5px; margin-top:10px; justify-content: flex-end;">
+                             ${g.status === 'ACTIVE' ? `<button class="btn-primary" style="width:auto; padding:6px 12px; font-size:12px; background:#e2e8f0; color:black;" onclick="openDepositModal(${g.id})">Deposit</button>` : ''}
+                             <button class="btn-primary" style="width:auto; padding:6px 12px; font-size:12px; background:var(--danger); color:white;" onclick="deleteGoal(${g.id})">Delete</button>
+                        </div>
+                    </div>`;
+                }).join('') : '<div style="text-align:center; padding:20px; opacity:0.6; width:100%">No active savings goals. Create one!</div>';
+            }
+        }
+
+        async function createSavingsGoal() {
+            const name = document.getElementById('goalName').value;
+            const target = document.getElementById('goalTarget').value;
+            if (!name || !target) return;
+
+            const res = await fetch(`${API}/savings/create?name=${encodeURIComponent(name)}&target=${target}`, {
+                method: 'POST', headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                document.getElementById('createGoalModal').classList.add('hidden');
+                document.getElementById('goalName').value = '';
+                document.getElementById('goalTarget').value = '';
+                loadSavingsGoals();
+                init(); // Refresh balance
+            } else {
+                const text = await res.text();
+                alert("Failed to create goal: " + text);
+            }
+        }
+
+        function openDepositModal(id) {
+            currentGoalId = id;
+            document.getElementById('depositModal').classList.remove('hidden');
+            document.getElementById('depositAmount').value = '';
+        }
+
+        function closeDepositModal() {
+            document.getElementById('depositModal').classList.add('hidden');
+            currentGoalId = null;
+        }
+
+        async function confirmDeposit() {
+            const amount = document.getElementById('depositAmount').value;
+            const cardId = document.getElementById('depositSource').value;
+
+            if (!amount || amount <= 0) return alert("Enter valid amount");
+
+            let url = `${API}/savings/deposit?goalId=${currentGoalId}&amount=${amount}`;
+            if (cardId) url += `&cardId=${cardId}`;
+
+            const res = await fetch(url, {
+                method: 'POST', headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                closeDepositModal();
+                loadSavingsGoals();
+                init(); // Refresh balance
+                msg('greetingText', 'Deposit Successful!', false);
+            } else {
+                const text = await res.text();
+                alert("Deposit failed: " + text);
+            }
+        }
+
+        async function deleteGoal(id) {
+            if (!confirm("Are you sure? Any funds will be refunded to your Main Account.")) return;
+
+            const res = await fetch(`${API}/savings/delete?goalId=${id}`, {
+                method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                loadSavingsGoals();
+                init(); // Refresh balance
+                msg('greetingText', 'Goal deleted & refunded', false);
+            } else {
+                alert("Failed to delete goal");
+            }
+        }
+
+        // Loans
+        async function loadLoans() {
+            const res = await fetch(`${API}/loan/history/${myAccount.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+            if (res.ok) {
+                const loans = await res.json();
+                document.getElementById('loanList').innerHTML = loans.map(l => `
+                    <div class="list-item">
+                        <div class="item-left">
+                            <h4>Loan #${l.id}</h4>
+                            <p>${l.status} • Rate: ${l.interestRate}%</p>
+                        </div>
+                        <div class="amount minus">${l.outstandingBalance} AZN</div>
+                    </div>
+                 `).join('');
+            }
+        }
+
+
+        async function claimBonus() {
+            if (!confirm("Bonus balansınızı əsas hesaba köçürmək istəyirsiniz?")) return;
+
+            const res = await fetch(`${API}/accounts/my-account/redeem-bonus`, {
+                method: 'POST', headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            const text = await res.text();
+            if (res.ok) {
+                msg('greetingText', 'Bonus uğurla köçürüldü!', false);
+                init();
+            } else {
+                msg('greetingText', 'Xəta: ' + text, true);
+            }
+        }
+
+        async function applyLoan() {
+            const p = document.getElementById('loanP').value;
+            const r = document.getElementById('loanR').value;
+            const t = document.getElementById('loanT').value;
+            const cid = document.getElementById('loanCardSelect').value;
+
+            if (!p || !r || !t) return;
+
+            let url = `${API}/loan/apply?accountId=${myAccount.id}&principal=${p}&interestRate=${r}&termMonths=${t}`;
+            if (cid) url += `&targetCardId=${cid}`;
+
+            const res = await fetch(url, {
+                method: 'POST', headers: { 'Authorization': `Bearer ${token}` }
+            });
+            msg('loanMsg', res.ok ? 'Loan Approved!' : 'Application Failed', !res.ok);
+            if (res.ok) {
+                init(); // Refresh all data including card balance
+            }
+        }
+
+    </script>
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="hidden"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+        <div class="panel"
+            style="width: 400px; max-width: 90%; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+            <h3 style="color: var(--danger); margin-top:0;">Confirm Deletion</h3>
+            <p style="margin-bottom: 20px; color: var(--text-dim);">To permanently delete this card, please verify your
+                identity.</p>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="delEmail" class="input-field" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="delPass" class="input-field" placeholder="********">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-primary" style="background: var(--danger);" onclick="confirmDeleteCard()">Delete
+                    Permanently</button>
+                <button class="btn-primary" style="background: transparent; border: 1px solid var(--border);"
+                    onclick="closeDeleteModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

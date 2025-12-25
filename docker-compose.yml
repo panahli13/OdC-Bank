@@ -1,25 +1,18 @@
+version: '3.8'
+
 services:
   db:
-    image: postgres:16
-    container_name: odc-bank-db
+    image: postgres:15-alpine
+    container_name: odc_bank_db
     environment:
-      POSTGRES_DB: odc_bank
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=odc_bank
     ports:
       - "5432:5432"
     volumes:
-      - odc_bank_pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
 
 volumes:
-  odc_bank_pgdata:
-
-
-
-
-
+  postgres_data:

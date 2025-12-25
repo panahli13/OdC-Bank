@@ -30,21 +30,26 @@ public class ExchangeController {
     @PostMapping
     public ResponseEntity<?> exchangeCurrency(
             @RequestParam Long accountId,
+            @RequestParam(required = false) Long cardId,
             @RequestParam String fromCurrency,
             @RequestParam String toCurrency,
             @RequestParam double amount,
-            Principal principal
-    ) {
+            Principal principal) {
         try {
             Account account = accountRepository.findById(accountId)
                     .orElseThrow(() -> new RuntimeException("Account tapılmadı"));
-            User user = userRepository.findByFullname(principal.getName())
+            User user = userRepository.findByEmail(principal.getName())
                     .orElseThrow(() -> new RuntimeException("User tapılmadı"));
 
             if (account.getUser() == null || !account.getUser().getId().equals(user.getId()))
                 return ResponseEntity.status(403).body("Bu hesab üzrə icazəniz yoxdur");
 
-            return ResponseEntity.ok(exchangeService.exchange(accountId, fromCurrency, toCurrency, amount));
+            if (cardId != null && cardId > 0) {
+                return ResponseEntity
+                        .ok(exchangeService.exchangeWithCard(accountId, cardId, fromCurrency, toCurrency, amount));
+            } else {
+                return ResponseEntity.ok(exchangeService.exchange(accountId, fromCurrency, toCurrency, amount));
+            }
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Xəta: " + e.getMessage());

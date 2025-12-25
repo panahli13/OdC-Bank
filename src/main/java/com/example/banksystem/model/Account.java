@@ -1,5 +1,6 @@
 package com.example.banksystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,6 +14,7 @@ public class Account {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
     private String accountNumber;
@@ -25,4 +27,7 @@ public class Account {
 
     private Double dailyWithdrawalLimit;
     private Double minBalance;
+
+    @Column(columnDefinition = "DOUBLE PRECISION DEFAULT 0.0")
+    private Double bonusBalance = 0.0;
 }

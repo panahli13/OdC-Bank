@@ -29,21 +29,26 @@ public class LoanController {
     @PostMapping("/apply")
     public ResponseEntity<?> applyLoan(
             @RequestParam Long accountId,
+            @RequestParam(required = false) Long targetCardId,
             @RequestParam double principal,
             @RequestParam double interestRate,
             @RequestParam int termMonths,
-            Principal principalUser
-    ) {
+            Principal principalUser) {
         try {
             Account account = accountRepository.findById(accountId)
                     .orElseThrow(() -> new RuntimeException("Account tapılmadı"));
-            User user = userRepository.findByFullname(principalUser.getName())
+            User user = userRepository.findByEmail(principalUser.getName())
                     .orElseThrow(() -> new RuntimeException("User tapılmadı"));
 
             if (account.getUser() == null || !account.getUser().getId().equals(user.getId()))
                 return ResponseEntity.status(403).body("Bu hesab üzrə icazəniz yoxdur");
 
-            Loan loan = loanService.applyLoan(accountId, principal, interestRate, termMonths);
+            Loan loan;
+            if (targetCardId != null && targetCardId > 0) {
+                loan = loanService.applyLoanWithCard(accountId, targetCardId, principal, interestRate, termMonths);
+            } else {
+                loan = loanService.applyLoan(accountId, principal, interestRate, termMonths);
+            }
             return ResponseEntity.ok(loan);
 
         } catch (Exception e) {
@@ -55,13 +60,12 @@ public class LoanController {
     public ResponseEntity<?> repayLoan(
             @RequestParam Long loanId,
             @RequestParam double amount,
-            Principal principalUser
-    ) {
+            Principal principalUser) {
         try {
             Loan loan = loanService.getLoanById(loanId);
             Account account = accountRepository.findById(loan.getAccountId())
                     .orElseThrow(() -> new RuntimeException("Account tapılmadı"));
-            User user = userRepository.findByFullname(principalUser.getName())
+            User user = userRepository.findByEmail(principalUser.getName())
                     .orElseThrow(() -> new RuntimeException("User tapılmadı"));
 
             if (account.getUser() == null || !account.getUser().getId().equals(user.getId()))
@@ -81,7 +85,7 @@ public class LoanController {
         try {
             Account account = accountRepository.findById(accountId)
                     .orElseThrow(() -> new RuntimeException("Account tapılmadı"));
-            User user = userRepository.findByFullname(principalUser.getName())
+            User user = userRepository.findByEmail(principalUser.getName())
                     .orElseThrow(() -> new RuntimeException("User tapılmadı"));
 
             if (account.getUser() == null || !account.getUser().getId().equals(user.getId()))

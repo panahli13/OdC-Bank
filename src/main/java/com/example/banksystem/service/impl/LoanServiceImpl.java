@@ -27,6 +27,9 @@ public class LoanServiceImpl implements LoanService {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private com.example.banksystem.repository.CardRepository cardRepository;
+
     @Transactional
     @Override
     public Loan requestLoan(Long accountId, Double principal, Double interestRate) throws Exception {
@@ -66,6 +69,43 @@ public class LoanServiceImpl implements LoanService {
         transaction.setFee(0.0);
         transaction.setNetAmount(principal);
         transaction.setType("LOAN_CREDIT");
+        transaction.setStatus(TransactionStatus.SUCCESS);
+        transaction.setCreatedAt(LocalDateTime.now());
+        transactionRepository.save(transaction);
+
+        return loan;
+    }
+
+    @Transactional
+    @Override
+    public Loan applyLoanWithCard(Long accountId, Long cardId, double principal, double interestRate, int termMonths)
+            throws Exception {
+        // 1. Create Base Loan Record
+        Loan loan = requestLoan(accountId, principal, interestRate);
+        loan.setStatus("APPROVED");
+        loan.setTermMonths(termMonths);
+        loanRepository.save(loan);
+
+        // 2. Load and Fund Card
+        com.example.banksystem.entity.Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new Exception("Card tapılmadı"));
+
+        if (!card.getAccount().getId().equals(accountId)) {
+            throw new Exception("Card bu hesaba aid deyil");
+        }
+
+        card.setBalance((card.getBalance() != null ? card.getBalance() : 0.0) + principal);
+        cardRepository.save(card);
+
+        // 3. Log Transaction
+        Transaction transaction = new Transaction();
+        transaction.setFromAccountId(null); // Bankdan
+        transaction.setToAccountId(accountId);
+        transaction.setAmount(principal);
+        transaction.setFee(0.0);
+        transaction.setNetAmount(principal);
+        transaction.setType("LOAN_CREDIT_CARD");
+        transaction.setReference("LOAN-" + loan.getId() + "-TO-CARD-" + cardId);
         transaction.setStatus(TransactionStatus.SUCCESS);
         transaction.setCreatedAt(LocalDateTime.now());
         transactionRepository.save(transaction);

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OdC Bank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e40af;
+            /* Corporate Blue */
+            --bg-body: #f3f4f6;
+            /* Light Gray */
+            --surface: #ffffff;
+            /* White */
+            --text-main: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', 'Segoe UI', sans-serif;
+            background-color: var(--bg-body);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Splash Screen Background fix */
+        #splashScreen {
+            background: var(--bg-body) !important;
+        }
+
+        .container {
+            background: var(--surface);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            width: 400px;
+            border: 1px solid var(--border);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-main);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            background: #f8fafc;
+            color: var(--text-main);
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+            background: #fff;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #1e3a8a;
+            transform: translateY(-1px);
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            display: none;
+            text-align: center;
+        }
+
+        .error {
+            background: #fef2f2;
+            color: #ef4444;
+            border: 1px solid #fee2e2;
+        }
+
+        .success {
+            background: #ecfdf5;
+            color: #10b981;
+            border: 1px solid #d1fae5;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #64748b;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Splash Screen -->
+    <div id="splashScreen"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f3f4f6; display: flex; justify-content: center; align-items: center; z-index: 9999; animation: fadeOut 1s ease-in-out 3s forwards;">
+        <div style="text-align: center; color: #1e293b; transform: scale(0.9);">
+            <img src="logo.png" alt="Logo"
+                style="width: 600px; height: 600px; object-fit: contain; margin-bottom: 10px; animation: bounceIn 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);">
+            <h1
+                style="font-size: 80px; margin: 0; color: #1e40af; letter-spacing: -2px; opacity: 0; animation: fadeInUp 0.8s ease forwards 0.5s;">
+                OdC Bank</h1>
+            <p
+                style="opacity: 0; animation: fadeInUp 0.8s ease forwards 0.8s; color: #475569; font-size: 2rem; font-weight: 300;">
+                Premium Banking Experience</p>
+        </div>
+    </div>
+
+    <style>
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+            }
+        }
+    </style>
+
+    <div class="container">
+        <h1>OdC Bank</h1>
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('login')">Login</div>
+            <div class="tab" onclick="showTab('register')">Register</div>
+        </div>
+
+        <div id="login" class="tab-content active">
+            <form onsubmit="login(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
+        <div id="register" class="tab-content">
+            <form onsubmit="register(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="regName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="regPhone" placeholder="+994XXXXXXXXX" required>
+                </div>
+                <div class="form-group">
+                    <label>FIN Code</label>
+                    <input type="text" id="regFincode" placeholder="7 characters" maxlength="7" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <button type="submit">Register</button>
+            </form>
+        </div>
+
+
+
+        <div id="verify" class="tab-content">
+            <form onsubmit="verifyEmail(event)">
+                <div class="form-group">
+                    <p style="text-align:center; color:#555; margin-bottom:15px;">
+                        Enter the verification code sent to your email.
+                        <br><small>(Expires in 15 minutes)</small>
+                    </p>
+                    <label>Verification Code</label>
+                    <input type="text" id="verifyCode" required placeholder="6 digit code" maxlength="6">
+                </div>
+                <button type="submit">Verify & Login</button>
+                <div class="link">
+                    <a href="#" onclick="resendCode(event)">Resend Code</a>
+                </div>
+            </form>
+        </div>
+
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        const API = 'http://localhost:8080';
+        let currentEmail = '';
+
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+
+            if (tab === 'verify') {
+                document.getElementById('verify').classList.add('active');
+            } else {
+                document.querySelector(`.tab:nth-child(${tab === 'login' ? 1 : 2})`).classList.add('active');
+                document.getElementById(tab).classList.add('active');
+            }
+            showMessage('', false); // clear messages
+        }
+
+        function showMessage(text, isError) {
+            const msg = document.getElementById('message');
+            if (!text) { msg.style.display = 'none'; return; }
+            msg.textContent = text;
+            msg.className = 'message ' + (isError ? 'error' : 'success');
+            msg.style.display = 'block';
+        }
+
+        async function login(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            try {
+                const res = await fetch(`${API}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        password: document.getElementById('loginPassword').value
+                    })
+                });
+
+                if (res.ok) {
+                    const token = await res.text();
+                    localStorage.setItem('token', token);
+                    showMessage('Login successful!', false);
+                    setTimeout(() => window.location.href = 'dashboard.html', 1000);
+                } else {
+                    const errorText = await res.text();
+                    showMessage(errorText || 'Login failed', true);
+
+                    if (errorText.toLowerCase().includes("not verified")) {
+                        currentEmail = email;
+                        setTimeout(() => showTab('verify'), 1500);
+                    }
+                }
+            } catch (err) {
+                showMessage('Connection error. Is backend running?', true);
+            }
+        }
+
+        async function register(e) {
+            e.preventDefault();
+            currentEmail = document.getElementById('regEmail').value;
+            try {
+                const res = await fetch(`${API}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        fullname: document.getElementById('regName').value,
+                        email: currentEmail,
+                        phone: document.getElementById('regPhone').value,
+                        fincode: document.getElementById('regFincode').value,
+                        password: document.getElementById('regPassword').value
+                    })
+                });
+                const text = await res.text();
+                // If it's "Email already in use" but backend actually treated it as resend (logic check needed)
+                // Actually my backend throws exception if enabled, else resends. 
+                // If it resends, it returns 200 OK? No, wait. 
+                // Ah, backend logic: if not enabled, resends and returns... wait, I put void return.
+                // So it returns 200 OK.
+
+                showMessage(text, !res.ok);
+
+                if (res.ok) {
+                    setTimeout(() => {
+                        showMessage('Code sent to ' + currentEmail, false);
+                        showTab('verify');
+                    }, 1500);
+                }
+            } catch (err) {
+                showMessage('Connection error. Is backend running?', true);
+            }
+        }
+
+        async function verifyEmail(e) {
+            e.preventDefault();
+            const code = document.getElementById('verifyCode').value;
+            try {
+                const res = await fetch(`${API}/auth/verify?code=${code}`);
+                const text = await res.text();
+                showMessage(text, !res.ok);
+
+                if (res.ok) {
+                    setTimeout(() => showTab('login'), 2000);
+                }
+            } catch (err) {
+                showMessage('Verification failed', true);
+            }
+        }
+
+        async function resendCode(e) {
+            e.preventDefault();
+            if (!currentEmail) {
+                currentEmail = prompt("Please enter your email to resend code:");
+            }
+            if (!currentEmail) return;
+
+            try {
+                const res = await fetch(`${API}/auth/resend?email=${currentEmail}`, { method: 'POST' });
+                const text = await res.text();
+                showMessage(text, !res.ok);
+            } catch (err) {
+                showMessage('Failed to resend code', true);
+            }
+        }
+    </script>
+</body>
+
+</html>

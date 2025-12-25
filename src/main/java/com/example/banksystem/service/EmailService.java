@@ -17,17 +17,26 @@ public class EmailService {
 
     public void sendVerificationEmail(String toEmail, String code) {
         if (mailSender == null) {
-            log.warn("Email sending is not configured (no JavaMailSender bean). Skipping verification email to {}. Code: {}", toEmail, code);
+            log.warn(
+                    "Email sending is not configured (no JavaMailSender bean). Skipping verification email to {}. Code: {}",
+                    toEmail, code);
             return;
         }
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("odc.bank2025@gmail.com");
         message.setTo(toEmail);
         message.setSubject("Email Təsdiqi");
         message.setText("Qeydiyyatı tamamlamak üçün kodunuz: " + code);
+
+        // DEVELOPMENT ONLY: Log code to console so developer can see it even if email
+        // fails
+        log.info("============== VERIFICATION CODE: {} ==============", code);
+
         try {
             mailSender.send(message);
+            log.info("Verification email sent successfully to {}", toEmail);
         } catch (Exception e) {
-            log.warn("Failed to send verification email to {}. Code: {}. Error: {}", toEmail, code, e.toString());
+            log.error("Failed to send verification email to {}. Code: {}", toEmail, code, e);
         }
     }
 }
